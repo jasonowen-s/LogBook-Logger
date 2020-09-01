@@ -50,26 +50,38 @@ class logger():
 
     def fill(self, username, password, clock_in, clock_out, activity, description):
         with webdriver.Chrome(options=self.options) as driver:
-            print('\nlogging in...')
-            driver.get('https://industry.socs.binus.ac.id/learning-plan/auth/login')
-            driver.find_element_by_xpath("//input[@name='username']").send_keys(username)
-            driver.find_element_by_xpath("//input[@name='password']").send_keys(password + Keys.ENTER)
-            print('\nfilling log...')
-            driver.get('https://industry.socs.binus.ac.id/learning-plan/student/log-book')
-            driver.find_element_by_xpath("//input[@name='clock-in']").send_keys(clock_in)
-            driver.find_element_by_xpath("//input[@name='clock-out']").send_keys(clock_out)
-            driver.find_element_by_xpath("//input[@name='activity']").send_keys(activity)
-            driver.find_element_by_xpath("//textarea[@name='description']").send_keys(description + Keys.TAB + Keys.ENTER)
-            print('\nchecking...')
-            driver.get('https://industry.socs.binus.ac.id/learning-plan/student/log-book')
-            result = (driver.find_elements_by_xpath("//div[@class='ui header']"))[1]
-            header = (result.text[0:27] == 'You already filled activity')
-            if(header):
-                tds = driver.find_elements_by_xpath("//td")
-                if((tds[1].text == clock_in) and (tds[3].text == clock_out) and (tds[5].text == activity) and (tds[7].text == description)):
-                    print('\nLog successfully filled!\n')
-                    return
-            print("\nLogging failed!\n")
+            try:
+                print('\nlogging in...')
+                driver.get('https://industry.socs.binus.ac.id/learning-plan/auth/login')
+                driver.find_element_by_xpath("//input[@name='username']").send_keys(username)
+                driver.find_element_by_xpath("//input[@name='password']").send_keys(password + Keys.ENTER)
+            except:
+                print('\nlogging in failed!\n')
+                return
+            
+            try:
+                print('\nfilling log...')
+                driver.get('https://industry.socs.binus.ac.id/learning-plan/student/log-book')
+                driver.find_element_by_xpath("//input[@name='clock-in']").send_keys(clock_in)
+                driver.find_element_by_xpath("//input[@name='clock-out']").send_keys(clock_out)
+                driver.find_element_by_xpath("//input[@name='activity']").send_keys(activity)
+                driver.find_element_by_xpath("//textarea[@name='description']").send_keys(description + Keys.TAB + Keys.ENTER)
+            except:
+                print('\nfilling log failed!\n')
+                return
+            
+            try:
+                print('\nchecking...')
+                driver.get('https://industry.socs.binus.ac.id/learning-plan/student/log-book')
+                result = (driver.find_elements_by_xpath("//div[@class='ui header']"))[1]
+                header = (result.text[0:27] == 'You already filled activity')
+                if(header):
+                    tds = driver.find_elements_by_xpath("//td")
+                    if((tds[1].text == clock_in) and (tds[3].text == clock_out) and (tds[5].text == activity) and (tds[7].text == description)):
+                        print('\nLog successfully filled!\n')
+                        return
+            except:
+                print("\nLogging failed!\n")
 
     def isWorkDay(self):
         t = TanggalMerah('./calendar.json')
