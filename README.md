@@ -38,3 +38,12 @@ pip install Pytanggalmerah
 ```
 python3 logger_script.py
 ```
+<br /><br />
+
+## What it Looks Like
+### Headless
+![headless](assets/headless.gif)
+<br /><br />
+
+### With Browser
+![with-browser](assets/with-browser.gif)
